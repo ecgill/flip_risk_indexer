@@ -54,24 +54,62 @@ For my prediction model, I wanted to train on the original MLS stats of a house 
 
 ![image](images/technologies.png)
 
-[add a graphic in here that basically shows this process:]
-
-csv -> pandas -> sklearn -> Flask -> AWS
-              -> jupyter notebook
-
 ## Flip Risk Indexer
 
-TBD
+#### Preprocessing, Feature Engineering, Feature selection
+Describe the classes I built to handle preprocessing and transformation of data.
+
+#### Building a Pipeline
+Briefly explain sklearn Pipeline and how I used it for this project...
+
+
+    num_cols = ['list_price', 'beds', 'baths', 'age', 'lodo_dist', 'heat']
+    cat_cols = ['basement']
+    bin_cols = ['property_type', 'structural_type', 'has_garage', 'fnf', 'td', 'one_story']
+
+    # Set up pipelines:
+    num_pipeline = Pipeline([
+      ('select_num', DFSelector(num_cols)),
+      ('scale', StandardScaler())
+      ])
+    cat_pipeline = Pipeline([
+      ('select_cat', DFSelector(cat_cols)),
+      ('label',  Labeler()),
+        ('hot_encode', HotEncoder())
+      ])
+    bin_pipeline = Pipeline([
+        ('select_bin', DFSelector(bin_cols))
+        ])
+    full_pipeline = Pipeline([
+        ('make_heat', HotZonerator(bandwidth=0.2)),
+      ('cleaner', MLSCleaner()),
+      ('feat_union', FeatureUnion(transformer_list=[
+            ('num_pipeline', num_pipeline),
+            ('cat_pipeline', cat_pipeline),
+            ('bin_pipeline', bin_pipeline)
+            ])),
+        ('regress', final_estimator)
+        ])
+
+#### Cross Validation and GridSearch
+Explain how I plugged various Regressor models in for final_estimator with default parameters to look at performance amongst them. Then took the best three and performed GridSearch.
+
+#### Best Model
+Explain the best model. Looking like Random Forest.
+
+#### New Predictions from Active MLS Listings
+Explain how new predictions are made using the trained Pipeline.
 
 ## Future Steps
 
 TBD
 
-## Repo structure
+## Repo Structure
 ```
 ├── data (will contain csv files and pickles of data)
 ├── notebooks (will contain scripts used for EDA and visualizations)
 ├── src (will contain the scripts used to perform the analysis)
+├── images (graphics used for web app, github)
 ├── web_app
 |     ├── static
 |     ├── templates
