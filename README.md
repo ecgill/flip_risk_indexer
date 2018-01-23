@@ -105,6 +105,7 @@ Upon exiting the FeatureUnion, the data are now NumPy arrays that get horizontal
 
 #### Cross Validation and GridSearch
 I performed a ```KFold``` cross validation with 5 splits using the default parameters of each of the following regression models to compare out of the box error. This is done simply by replacing appending these models to a list, and then looping over the list inserting each into the ```final_estimator``` part of the pipeline, cross-validating on that pipeline, and then repeating with each regressor in the list.
+
     LinearRegression()
     Ridge()
     RandomForestRegressor(n_estimators=500)
