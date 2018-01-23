@@ -17,25 +17,47 @@ Galvanize Data Science Immersive - January 2018
 
 ## Background
 
-Privy is a real estate investment software that finds and analyzes deals fast. It informs agents of where investors are doing deals and it allows investors to make deals without needing an agent. In the world of Privy, investments come in three categories: fix 'n flips, pop-tops, and total tear downs.
+[Privy](http://www.getprivynow.com/) is a real estate investment software that finds and analyzes deals fast. It informs agents of where investors are doing deals and it allows investors to make deals without needing an agent. In the world of Privy, investments come in three categories: fix 'n flips, pop-tops, and total tear downs.
 
-In a market like Denver's, investment opportunities are a dime a dozen. This project will help Privy locate how hot zones in Denver are shifting, and use past investment opportunities to develop a Flip Risk Indexer for houses currently on the market.
+In a market like Denver's, investment opportunities are everywhere, but also highly sought after. Investors need to act fast on open listings. FlipRiskIndexer helps investors and agents representing investors to:
+- identify hot zones for investment in Denver metro area,
+- help investors visualize how hot zones have been shifting, and
+- use hot zones along with property attributes from past investment opportunities
+to develop a Flip Risk Indexer for houses currently on the market.
 
 ## Web Application
 
-I will create an app called FlipRiskIndexer using Flask and self-host it on AWS.
+I created an app called FlipRiskIndexer using Flask and self-hosted it on AWS.
+
+[screenshot of home page]
+
+FlipRiskIndexer asks the user to input the type of investment they are interested in undertaking, along with their renovation budget. On the backend, a Random Forest Regression model predicts the potential listing price of that property post-renovations. Using the differential between the predicted value of the flipped home and the original listing price, along with your given renovation budget, FlipRiskIndexer categorizes flips as black (safe), grey (eh?) and red (walk away!). It also provides the user with information about the Top 20 potential investment properties and potential earnings for the Metro Denver area.
+
+[screenshot of prediction page]
+
+FlipRiskIndexer also provides heat maps that show where the hottest investment zone in Denver are right now and where they have been in the past.
+
+[screenshot of heatmap page]
 
 ## Data Collection and Cleaning
 
-I am currently working with MLS (Multiple Listing Services) real estate listings for Denver, a .csv obtained from Privy of 500K rows of current and previous real estate listings. Investment purchases are identified in three categories: fix 'n flips, pop-tops, and scrapes. A fix 'n flip is ID'd in the MLS as a property that was bought and then resold in a relatively short period of time with a price increase. A pop-top is ID'd in the MLS when a  property changes how many levels there are (i.e. it is purchased as a 2-story and then re-sold as a 3-story). Lastly, a scrap is ID'd in the MLS as a change in the year the house was build (e.g. it is purchased as a house  built in 1950 and then resold as a house built in 2017).
+The data provided by Privy are MLS (Multiple Listing Services) real estate listings for Denver since 2008 as a .csv with over 500K rows of current and previous real estate listings. This .csv had about 55 columns of data, some of which were very long text fields that delimited incorrectly. I used the csv package to read the data in line by line to identify inconsistencies and fix them on the fly, writing each clean line to a new .csv file. The clean MLS .csv could then be read in as a pandas dataframe for pre-processing.
 
-I read the .csv in as a pandas DataFrame, and cleaned the dataset a bit. The delimiting was off, so some rows were longer than others. I used the csv package to read in the .csv line by line, locate the inconsistencies and then used various ways to clean them up. Once clean, I categorized these three investment options, finding about 15K in total since 2008.
+A second .csv provided by Privy identified investment purchases in Denver. Investment purchases are categorized as one of the following three deal types:
+- **fix 'n flips** - when an investor guts the inside of a house and renovates. These are ID'd in the MLS as a property that was bought and then resold in a relatively short period of time with a price increase
+- **pop-tops** - when an investor takes the roof off, and adds one or more stories. These are ID'd in the MLS when a  property changes how many levels there are (i.e. it is purchased as a 2-story and then re-sold as a 3-story)
+- **scrapes** - when an investor buys a property, tears down the existing structure, and then rebuilds. These are ID'd in the MLS as a change in the year the house was build (e.g. it is purchased as a house built in 1970 and then resold as a house built in 2017).
 
-...more to come.
+For my prediction model, I wanted to train on the original MLS stats of a house that was successfully flipped. So, I merged these two .csv's using corresponding listing numbers from the original sale, and then passed the original MLS stats (i.e. listing price, beds, baths, square feet, etc.) to preprocessing for feature selection and engineering.
 
 ## Technologies Used
 
-TBD
+![image](images/technologies.png)
+
+[add a graphic in here that basically shows this process:]
+
+csv -> pandas -> sklearn -> Flask -> AWS
+              -> jupyter notebook
 
 ## Flip Risk Indexer
 
