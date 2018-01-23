@@ -120,11 +120,17 @@ Given the results of the cross-validation, I moved forward grid searching (using
 
 A Random Forest Regressor with 1000 trees with five as the minimum number of samples on each leaf node for some regularization provided the following errors:
 
-| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
+| Data Sample | R2   | RMSE   | Mean AE | Median AE
+| ----------- | ----:| ------:| -------:| --------:|
+| Train       | 0.95 | $36.6K | $22.6K  | $14.8K   |
+| Test        | 0.91 | $51.6K | $33.1K  | $22.2K   |
+| All         | 0.94 | $41.8K | $22.2K  | $16.6K   |
+
+Some notes on metrics:
+- R2 is very good because of the nature of this data. Listing price is used as a feature, and you almost always know you're going to sell the property for more money than you bought it for. This inherent relationship between listing price and the target makes R2 high.
+- Better metrics that reflect the actual error in the residuals of predictions are Root Mean Squared Error (RMSE), Mean Absolute Error (Mean AE) and Median Absolute Error (Median AE).
+
+Testing data was never used for any training and reflect the errors that might be expected on new data.
 
 #### New Predictions from Active MLS Listings
 Explain how new predictions are made using the trained Pipeline.
