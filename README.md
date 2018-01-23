@@ -57,30 +57,28 @@ For my prediction model, I wanted to train on the original MLS stats of a house 
 
 ## Flip Risk Indexer
 
-#### Preprocessing, Feature Engineering, Feature selection
-Describe the classes I built to handle preprocessing and transformation of data.
+#### My Pipeline
+The [Pipeline](http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html) constructor from sklearn allows you to chain transformers and estimators together into a sequence that functions as one cohesive unit. For example, if your model involves feature selection, standardization, and then regression, those three steps, each as it's own class, could be encapsulated together via `Pipeline`. See [this GitHubGist](insert_link_to_gist) for more.
 
-#### Building a Pipeline
-Briefly explain sklearn Pipeline and how I used it for this project...
+Pipeline's are great because they ensure operations are performed on existing and new data in the correct order, and that new data are treated identically to the data you trained on. Additionally, once your Pipeline is built, you only call .fit and .predict on the Pipeline object itself, instead of a separate .fit_transform and .predict on each class. Another perk - you can gridsearch once over your entire Pipeline, swapping in different types of estimators to compare.
 
+In addition to the benefits listed above, I was particularly drawn to Pipeline's due to the nature of my data being multi-type (binary, categorical, and numerical features). Each type of feature can be treated in parallel to one another within the Pipeline via a [FeatureUnion](http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.FeatureUnion.html). See below for my Pipeline and brief explanation of the components.
 
-    num_cols = ['list_price', 'beds', 'baths', 'age', 'lodo_dist', 'heat']
-    cat_cols = ['basement']
-    bin_cols = ['property_type', 'structural_type', 'has_garage', 'fnf', 'td', 'one_story']
-
-    # Set up pipelines:
     num_pipeline = Pipeline([
       ('select_num', DFSelector(num_cols)),
       ('scale', StandardScaler())
       ])
+
     cat_pipeline = Pipeline([
       ('select_cat', DFSelector(cat_cols)),
       ('label',  Labeler()),
-        ('hot_encode', HotEncoder())
+      ('hot_encode', HotEncoder())
       ])
+
     bin_pipeline = Pipeline([
         ('select_bin', DFSelector(bin_cols))
         ])
+
     full_pipeline = Pipeline([
         ('make_heat', HotZonerator(bandwidth=0.2)),
       ('cleaner', MLSCleaner()),
@@ -91,6 +89,16 @@ Briefly explain sklearn Pipeline and how I used it for this project...
             ])),
         ('regress', final_estimator)
         ])
+
+full_pipeline shows the entire pipeline from start to finish. First, I created a
+
+To process types of features in parallel, I created a custom transformer, ```DFSelector()``` that transforms the data by selecting desired columns. It appears as the first transformer within each of the three FeatureUnion pipelines (num_pipeline, cat_pipeline, bin_pipeline).
+
+In ```num_pipeline```, numerical features (columns) are selected and then passed to ```StandardScaler()```, which removes the mean and divides by the standard deviation of each column.
+
+In ```cat_pipeline```, categorical features are selected, sent to the ```Labeler()``` transformer, which labels each category of a column as a number (i.e. 'partial_basement' = 1, 'finished_basement' = 2, 'unfinished_basement' = 3, 'no_basement' = 4). Then the ```HotEncoder()``` transformer transforms the categorical index into binary features - one for each of the categories in the original column.
+
+#### Preprocessing, Feature Engineering, Feature selection
 
 #### Cross Validation and GridSearch
 Explain how I plugged various Regressor models in for final_estimator with default parameters to look at performance amongst them. Then took the best three and performed GridSearch.
