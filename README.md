@@ -103,12 +103,12 @@ The output of ```MLSCleaner()``` heads into the ```FeatureUnion()```. Within the
 
 Upon exiting the FeatureUnion, the data are now NumPy arrays that get horizontally stacked back together for a fully numeric feature matrix ready for an estimator.
 
-#### Final Estimator - Random Forest Regressor
-The ```final_estimator``` of my pipeline is a Random Forest Regressor
-
-
 #### Cross Validation and GridSearch
-Explain how I plugged various Regressor models in for final_estimator with default parameters to look at performance amongst them. Then took the best three and performed GridSearch.
+I performed a ```KFold``` cross validation with 5 splits using the default parameters of each of the following regression models to compare out of the box error: ```LinearRegression(), Ridge(), RandomForestRegressor(n_estimators=500), AdaBoostRegressor(n_estimators=500), GradientBoostingRegressor(n_estimators=500), KNeighborsRegressor(n_neighbors=3), and BayesianRidge()```.
+
+[insert boxplot]
+
+I moved forward grid searching for optimal parameters on the two best models: ```RandomForestRegressor()``` and ```GradientBoostingRegressor()```.
 
 #### Best Model
 Explain the best model. Looking like Random Forest.
