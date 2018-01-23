@@ -129,7 +129,8 @@ A Random Forest Regressor with 1000 trees with five as the minimum number of sam
 Some notes on metrics:
 - R2 is very good because of the nature of this data. Listing price is used as a feature, and you almost always know you're going to sell the property for more money than you bought it for. This inherent relationship between listing price and the target makes R2 high.
 - Better metrics that reflect the actual error in the residuals of predictions are Root Mean Squared Error (RMSE), Mean Absolute Error (Mean AE) and Median Absolute Error (Median AE).
-  - Of these, RMSE is penalized higher for outliers, which are common and happen in the real estate investment world (e.g., past investments that for a multitude of reasons may have made way more money than usual). Mean AE is also affected by outlier, but less to.
+  - Of these, RMSE is penalized higher for outliers, which are common and happen in the real estate investment world (e.g., past investments that for a multitude of reasons may have made way more money than usual).
+  - Mean AE is also affected by outlier, but less so than RMSE.
   - Median AE provides a look at typical errors uninfluenced by outliers.
 
 Testing data was never used for any training and reflect the errors that might be expected on new data.
@@ -137,9 +138,15 @@ Testing data was never used for any training and reflect the errors that might b
 #### New Predictions from Active MLS Listings
 Listings from the MLS with a status of "active" indicate they are currently on the market. Information provided from the investor includes what type of renovation they are looking to undertake (fix 'n flip, pop-top, or scrape) and what their renovation budget is. I take the type of investment they listed along with the housing attributes from all active listings in Denver, and predict how much they could sell that home post-renovation. Then, using their renovation budget, along with Median Absolute Error metric of my model, I categorize active listings as black (safe flip), grey (risky flip) and red (don't flip!). I also provide the Top 20 options based on potential profit gain.
 
-## Future Steps
+## Discussion
+The beauty of this model is that it predicts homes purely based on whether they are close to a pervious "hot zone" of Denver along with all their housing attributes one would find on an MLS listing. Therefore, you can easily re-run this model, update it with past investments, and categorize the Flip Risk on new active listings.
 
-TBD
+It's beauty is also it's curse in that, obviously, there are many more factors that go into how much money an investor can make on a flipping opportunity. For example, an investor may also do their own contracting, in which case, they may be able to shoot for properties with higher initial listing prices since they are likely saving money on their renovation budget. Or, as we all know, things can go wrong during renovation and explode your budget. This model obviously cannot account for such factors. But, at the least, it provides a nice first cut glance at the current housing market and options that investors should look further into.
+
+# Future Steps
+Currently, the deal type (fix 'n flip, pop-top, or scrape) is just a feature in my model. It's probably not surprising that you aim to make a lot more money on a scrape than on a fix 'n flip. It's possible that treating each of those categories with it's own model would help in controlling the variance of the data that each model is trained on, which ultimately should help us capture more signal and have lower errors.
+
+Additionally, I would explore more of the features of the MLS. There are many! There are also a lot of text fields that could undergo natural language processing and become some additional features in the model
 
 ## Repo Structure
 ```
