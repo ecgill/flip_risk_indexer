@@ -90,18 +90,22 @@ In addition to the benefits listed above, I was particularly drawn to Pipeline's
         ('regress', final_estimator)
         ])
 
-
+#### Preprocessing, Feature Engineering, Feature selection
 In the code, ```full_pipeline``` shows the entire pipeline from start to finish. First, I created a custom transformer ```HotZonerator()``` that takes all investments over the last 10 years, fits a 2-D Kernel Density Estimator to the listings geospatially with x as longitude and y as latitude. This Kernel Density Estimator is used later to transform new data, giving it a z-value, "heat", that is indicative of whether the property is located within an area that has been hot with investment activity in the past. HotZonerator() takes the estimated "heat" and appends it as a new feature to the feature matrix.
 
-Next, the entire feature matrix passes into another custom transformer - ```MLSCleaner()```. 
+Next, the entire feature matrix passes into another custom transformer - ```MLSCleaner()```. This transformer has methods that do the following:
+- fills null/NaNs with zero wherever appropriate
+- engineers a few other simpler features (i.e. turning some multi-class string columns into binary, calculating the age of a home based on the year it was listed and the year it was built, etc.)
+- drops unwanted columns
 
-To process types of features in parallel, I created a custom transformer, ```DFSelector()``` that transforms the data by selecting desired columns. It appears as the first transformer within each of the three FeatureUnion pipelines (num_pipeline, cat_pipeline, bin_pipeline).
+#### FeatureUnion
+The output of ```MLSCleaner()``` heads into the ```FeatureUnion()```. Within the ```FeatureUnion()```, three inner pipelines run in parallel to one another, undergoing different transformations based on the type of feature they are (numerical, categorical, or binary). To process types of features in parallel, I created a custom transformer, ```DFSelector()``` that transforms the data by selecting desired columns. It appears as the first transformer within each of the three FeatureUnion pipelines (num_pipeline, cat_pipeline, bin_pipeline). In ```num_pipeline```, numerical features (columns) are selected and then passed to ```StandardScaler()```, which removes the mean and divides by the standard deviation of each column. In ```cat_pipeline```, categorical features are selected, sent to the ```Labeler()``` transformer, which labels each category of a column as a number (i.e. 'partial_basement' = 1, 'finished_basement' = 2, 'unfinished_basement' = 3, 'no_basement' = 4). Then the ```HotEncoder()``` transformer transforms the categorical index into binary features - one for each of the categories in the original column.
 
-In ```num_pipeline```, numerical features (columns) are selected and then passed to ```StandardScaler()```, which removes the mean and divides by the standard deviation of each column.
+Upon exiting the FeatureUnion, the data are now NumPy arrays that get horizontally stacked back together for a fully numeric feature matrix ready for an estimator.
 
-In ```cat_pipeline```, categorical features are selected, sent to the ```Labeler()``` transformer, which labels each category of a column as a number (i.e. 'partial_basement' = 1, 'finished_basement' = 2, 'unfinished_basement' = 3, 'no_basement' = 4). Then the ```HotEncoder()``` transformer transforms the categorical index into binary features - one for each of the categories in the original column.
+#### Final Estimator - Random Forest Regressor
+The ```final_estimator``` of my pipeline is a Random Forest Regressor
 
-#### Preprocessing, Feature Engineering, Feature selection
 
 #### Cross Validation and GridSearch
 Explain how I plugged various Regressor models in for final_estimator with default parameters to look at performance amongst them. Then took the best three and performed GridSearch.
