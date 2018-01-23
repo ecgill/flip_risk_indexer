@@ -104,14 +104,27 @@ The output of ```MLSCleaner()``` heads into the ```FeatureUnion()```. Within the
 Upon exiting the FeatureUnion, the data are now NumPy arrays that get horizontally stacked back together for a fully numeric feature matrix ready for an estimator.
 
 #### Cross Validation and GridSearch
-I performed a ```KFold``` cross validation with 5 splits using the default parameters of each of the following regression models to compare out of the box error: ```LinearRegression(), Ridge(), RandomForestRegressor(n_estimators=500), AdaBoostRegressor(n_estimators=500), GradientBoostingRegressor(n_estimators=500), KNeighborsRegressor(n_neighbors=3), and BayesianRidge()```.
+I performed a ```KFold``` cross validation with 5 splits using the default parameters of each of the following regression models to compare out of the box error. This is done simply by replacing appending these models to a list, and then looping over the list inserting each into the ```final_estimator``` part of the pipeline, cross-validating on that pipeline, and then repeating with each regressor in the list.
+    LinearRegression()
+    Ridge()
+    RandomForestRegressor(n_estimators=500)
+    AdaBoostRegressor(n_estimators=500)
+    GradientBoostingRegressor(n_estimators=500)
+    KNeighborsRegressor(n_neighbors=3)
+    BayesianRidge()
 
 [insert boxplot]
 
-I moved forward grid searching for optimal parameters on the two best models: ```RandomForestRegressor()``` and ```GradientBoostingRegressor()```.
-
 #### Best Model
-Explain the best model. Looking like Random Forest.
+Given the results of the cross-validation, I moved forward grid searching (using sklearn's ```GridSearchCV```) on the pipeline for optimal parameters of the two best performing estimators: ```RandomForestRegressor()``` and ```GradientBoostingRegressor()```.
+
+A Random Forest Regressor with 1000 trees with five as the minimum number of samples on each leaf node for some regularization provided the following errors:
+
+| Tables        | Are           | Cool  |
+| ------------- |:-------------:| -----:|
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      | centered      |   $12 |
+| zebra stripes | are neat      |    $1 |
 
 #### New Predictions from Active MLS Listings
 Explain how new predictions are made using the trained Pipeline.
