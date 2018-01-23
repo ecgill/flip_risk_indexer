@@ -130,12 +130,12 @@ Some notes on metrics:
 - R2 is very good because of the nature of this data. Listing price is used as a feature, and you almost always know you're going to sell the property for more money than you bought it for. This inherent relationship between listing price and the target makes R2 high.
 - Better metrics that reflect the actual error in the residuals of predictions are Root Mean Squared Error (RMSE), Mean Absolute Error (Mean AE) and Median Absolute Error (Median AE).
   - Of these, RMSE is penalized higher for outliers, which are common and happen in the real estate investment world (e.g., past investments that for a multitude of reasons may have made way more money than usual). Mean AE is also affected by outlier, but less to.
-  - Median AE provides a look at typical errors  '   nTo look at error when we
+  - Median AE provides a look at typical errors uninfluenced by outliers.
 
 Testing data was never used for any training and reflect the errors that might be expected on new data.
 
 #### New Predictions from Active MLS Listings
-Explain how new predictions are made using the trained Pipeline.
+Listings from the MLS with a status of "active" indicate they are currently on the market. Information provided from the investor includes what type of renovation they are looking to undertake (fix 'n flip, pop-top, or scrape) and what their renovation budget is. I take the type of investment they listed along with the housing attributes from all active listings in Denver, and predict how much they could sell that home post-renovation. Then, using their renovation budget, along with Median Absolute Error metric of my model, I categorize active listings as black (safe flip), grey (risky flip) and red (don't flip!). I also provide the Top 20 options based on potential profit gain.
 
 ## Future Steps
 
