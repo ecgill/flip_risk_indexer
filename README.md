@@ -129,6 +129,8 @@ A Random Forest Regressor with 1000 trees with five as the minimum number of sam
 Some notes on metrics:
 - R2 is very good because of the nature of this data. Listing price is used as a feature, and you almost always know you're going to sell the property for more money than you bought it for. This inherent relationship between listing price and the target makes R2 high.
 - Better metrics that reflect the actual error in the residuals of predictions are Root Mean Squared Error (RMSE), Mean Absolute Error (Mean AE) and Median Absolute Error (Median AE).
+  - Of these, RMSE is penalized higher for outliers, which are common and happen in the real estate investment world (e.g., past investments that for a multitude of reasons may have made way more money than usual). Mean AE is also affected by outlier, but less to.
+  - Median AE provides a look at typical errors  '   nTo look at error when we
 
 Testing data was never used for any training and reflect the errors that might be expected on new data.
 
