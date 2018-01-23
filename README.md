@@ -53,7 +53,7 @@ For my prediction model, I wanted to train on the original MLS stats of a house 
 ## Technologies Used
 
 <!-- ![image](images/technologies.png) -->
-<img src="/images/technologies.png" width="850" height="350">
+<img src="/images/technologies.png" width="900" height="350">
 
 ## Flip Risk Indexer
 
