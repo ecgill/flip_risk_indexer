@@ -143,7 +143,7 @@ The beauty of this model is that it predicts homes purely based on whether they 
 
 It's beauty is also it's curse in that, obviously, there are many more factors that go into how much money an investor can make on a flipping opportunity. For example, an investor may also do their own contracting, in which case, they may be able to shoot for properties with higher initial listing prices since they are likely saving money on their renovation budget. Or, as we all know, things can go wrong during renovation and explode your budget. This model obviously cannot account for such factors. But, at the least, it provides a nice first cut glance at the current housing market and options that investors should look further into.
 
-# Future Steps
+## Future Steps
 Currently, the deal type (fix 'n flip, pop-top, or scrape) is just a feature in my model. It's probably not surprising that you aim to make a lot more money on a scrape than on a fix 'n flip. It's possible that treating each of those categories with it's own model would help in controlling the variance of the data that each model is trained on, which ultimately should help us capture more signal and have lower errors.
 
 Additionally, I would explore more of the features of the MLS. There are many! There are also a lot of text fields that could undergo natural language processing and become some additional features in the model
