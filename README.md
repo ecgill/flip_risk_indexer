@@ -1,3 +1,6 @@
+<img src="/images/heatmap_header.png" width="900" height="300">
+
+
 # Flip Risk Indexer
 
 Emily Gill
