@@ -80,7 +80,7 @@ In addition to the benefits listed above, I was particularly drawn to Pipeline's
         ])
 
     full_pipeline = Pipeline([
-        ('make_heat', HotZonerator(bandwidth=0.2)),
+      ('make_heat', HotZonerator(bandwidth=0.2)),
       ('cleaner', MLSCleaner()),
       ('feat_union', FeatureUnion(transformer_list=[
             ('num_pipeline', num_pipeline),
@@ -90,7 +90,10 @@ In addition to the benefits listed above, I was particularly drawn to Pipeline's
         ('regress', final_estimator)
         ])
 
-full_pipeline shows the entire pipeline from start to finish. First, I created a
+
+In the code, ```full_pipeline``` shows the entire pipeline from start to finish. First, I created a custom transformer ```HotZonerator()``` that takes all investments over the last 10 years, fits a 2-D Kernel Density Estimator to the listings geospatially with x as longitude and y as latitude. This Kernel Density Estimator is used later to transform new data, giving it a z-value, "heat", that is indicative of whether the property is located within an area that has been hot with investment activity in the past. HotZonerator() takes the estimated "heat" and appends it as a new feature to the feature matrix.
+
+Next, the entire feature matrix passes into another custom transformer - ```MLSCleaner()```. 
 
 To process types of features in parallel, I created a custom transformer, ```DFSelector()``` that transforms the data by selecting desired columns. It appears as the first transformer within each of the three FeatureUnion pipelines (num_pipeline, cat_pipeline, bin_pipeline).
 
