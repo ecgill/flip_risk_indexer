@@ -2,19 +2,21 @@
 {% block content %}
 
 
-<div class="container">
-<p></p>
-    <table style="width:100%">
-      <tr>
-        <th>Name</th>
-      </tr>
-      <tr>
-        <td>Emily Gill</td>
-      </tr>
-</table>
+  <h1>Your Predicted Top 20</h1>
+
+  <span style="color: black; font-weight: bold;">Your Deal Type</span>
+  <p>{{ u_deal_type }}</p>
+  <span style="color: black; font-weight: bold;">Your Reno Budget</span>
+  <p>{{ u_reno_budget }}</p>
+
+  <span style="color: black; font-weight: bold;">Table</span>
+  <p>{{ top20table }}</p>
+
+  <span style="color: black; font-weight: bold;">Map</span>
+  <iframe src={{html_map}} style="display: block; width: 90%; height: 600px; margin: 0 auto; border: 0;"></iframe>
 
 
-</div><!-- /.container -->
+
 
 
 <!-- Bootstrap core JavaScript
