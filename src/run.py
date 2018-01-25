@@ -1,6 +1,6 @@
 import numpy as np
 import src.library as lib
-import _pickle as pickle
+# import pickle as pickle
 from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
@@ -56,7 +56,7 @@ def plot_actual_v_pred(y_train, y_pred_train, y_test, y_pred_test):
     ax_test.set_xlabel('Actual target (test)')
     ax_test.plot(y_test, y_test, 'k-', alpha=0.5)
     ax_test.scatter(y_test, y_pred_test, alpha=0.5)
-    plt.show()
+    plt.savefig('images/pred_v_actual_scatter.png')
 
 def print_feat_importance(forest_pipe):
     forest = forest_pipe.steps[3][1]

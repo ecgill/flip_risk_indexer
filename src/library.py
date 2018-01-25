@@ -159,21 +159,40 @@ def plot_kde2d(x, y, bandwidth, xbins=100j, ybins=100j, **kwargs):
     # score_samples() returns the log-likelihood of the samples
     z = np.exp(kde.score_samples(xy_sample))
     Z = np.reshape(z, X.shape)
-    plt.pcolormesh(X, Y, Z)
-    plt.show()
+    plt.pcolormesh(X, Y, Z, cmap=plt.cm.RdYlGn_r)
+    plt.title('2D Kernel Density Heat Map')
+    plt.xlabel('Longitude')
+    plt.ylabel('Latitude')
+    plt.colorbar()
+    plt.savefig('images/2d_kernel_heatmap.png', transparent=True)
     return X, Y, Z
 
 
 if __name__ == '__main__':
-    pass
-    # flips = 'data/denver-deals-clean.csv'
-    # df_flips = lib.read_flips(flips)
+    # from src.run import get_data
+    # from sklearn.model_selection import train_test_split
     #
-    # df_plot = df_flips[['deal_type', 'lat', 'lng', 'perc_gain', 'status_changed_on']].copy()
-    # lat_m = df_plot['lat'].mean()
-    # lon_m = df_plot['lng'].mean()
+    # print('--- Get data -- ')
+    # X, y = get_data()
     #
-    # lat = df_plot['lat'].values
-    # lon = df_plot['lng'].values
+    # print('--- Test train split data ---')
+    # X_train, X_test, y_train, y_test = train_test_split(X, y,
+    #     test_size=0.3, random_state=42)
     #
-    # xx, yy, zz = kde2d(lon, lat, 0.02)
+    #
+    # lat = X_train['lat'].values
+    # lon = X_train['lng'].values
+    #
+    # xx, yy, zz = plot_kde2d(lon, ylat, 0.02)
+
+    flips = 'data/denver-deals-clean.csv'
+    df_flips = read_flips(flips)
+
+    df_plot = df_flips[['deal_type', 'lat', 'lng', 'perc_gain', 'status_changed_on']].copy()
+    lat_m = df_plot['lat'].mean()
+    lon_m = df_plot['lng'].mean()
+
+    lat = df_plot['lat'].values
+    lon = df_plot['lng'].values
+
+    xx, yy, zz = plot_kde2d(lon, lat, 0.02)

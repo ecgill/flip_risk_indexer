@@ -4,6 +4,16 @@ import numpy as np
 import src.library as lib
 from src.GoogleMapPlotter import GoogleMapPlotter
 
+def make_one_map(df):
+    lat = df['lat'].values
+    lon = df['lng'].values
+    path = [tuple(lat), tuple(lon)]
+    mymap = GoogleMapPlotter(39.728, -104.963, 11)
+    mymap.heatmap(path[0], path[1], radius=15, maxIntensity=10)
+    dir_name = 'images/maps/'
+    map_name =  'all_flips_heat.html'
+    mymap.draw(dir_name + map_name)
+
 def make_imgs_for_gif(df):
     lat_m = df['lat'].mean()
     lon_m = df['lng'].mean()
@@ -34,15 +44,20 @@ def make_gif(filenames, fps=1.0):
     imageio.mimsave('images/maps/pngs/test.gif', images, fps=fps)
 
 if __name__ == '__main__':
-    print('--- Get data for making heat maps and select only "sold" properties ---')
+    print('--- Get data for making heat maps ---')
     flip_fn = 'data/denver-deals-clean.csv'
     df_flips = lib.read_flips(flip_fn)
+
+    print('--- Make a single Google map ---')
+    make_one_map(df_flips)
+
+    print('--- Select only "sold" properties ---')
     df_sold = df_flips[df_flips['status'] == 'sold']
     df_plot = df_sold[['deal_type', 'lat', 'lng', 'perc_gain', 'status_changed_on','year', 'month']].copy()
 
     print('--- Making gmap images to be used in gif ---')
     make_imgs_for_gif(df_plot)
 
-    print('--- Call .pngs to make .gif ---')
-    filenames = glob.glob('images/maps/pngs/*.png')
-    make_gif(filenames, fps=1.0)
+    # print('--- Call .pngs to make .gif ---')
+    # filenames = glob.glob('images/maps/pngs/*.png')
+    # make_gif(filenames, fps=1.0)
