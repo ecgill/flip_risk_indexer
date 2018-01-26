@@ -1,4 +1,4 @@
-<img src="/images/heatmap_header.png" width="900" height="300">
+<img src="/static/img/heatmap_header.png" width="900" height="300">
 
 
 # Flip Risk Indexer
@@ -56,7 +56,7 @@ For my prediction model, I wanted to train on the original MLS stats of a house 
 ## Technologies Used
 
 <!-- ![image](images/technologies.png) -->
-<img src="/images/technologies.png" width="900" height="300">
+<img src="static/img/technologies.png" width="900" height="300">
 
 ## Flip Risk Indexer
 
