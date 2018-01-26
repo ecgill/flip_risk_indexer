@@ -68,7 +68,7 @@ def boxplot_cv(cv_results, names):
         ax.set_ylabel(score)
         ax.set_xticklabels(labels)
         ax.set_xlabel('sklearn Regressor models')
-        plt.savefig('images/cv_model_comparison_' + score + '.pdf', transparent=True)
+        plt.savefig('static/plots/cv_model_comparison_' + score + '.pdf', transparent=True)
 
 if __name__ == '__main__':
     print('--- Get data -- ')

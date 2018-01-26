@@ -169,30 +169,16 @@ def plot_kde2d(x, y, bandwidth, xbins=100j, ybins=100j, **kwargs):
 
 
 if __name__ == '__main__':
-    # from src.run import get_data
-    # from sklearn.model_selection import train_test_split
+    pass
     #
-    # print('--- Get data -- ')
-    # X, y = get_data()
+    # flips = 'data/denver-deals-clean.csv'
+    # df_flips = read_flips(flips)
     #
-    # print('--- Test train split data ---')
-    # X_train, X_test, y_train, y_test = train_test_split(X, y,
-    #     test_size=0.3, random_state=42)
+    # df_plot = df_flips[['deal_type', 'lat', 'lng', 'perc_gain', 'status_changed_on']].copy()
+    # lat_m = df_plot['lat'].mean()
+    # lon_m = df_plot['lng'].mean()
     #
+    # lat = df_plot['lat'].values
+    # lon = df_plot['lng'].values
     #
-    # lat = X_train['lat'].values
-    # lon = X_train['lng'].values
-    #
-    # xx, yy, zz = plot_kde2d(lon, ylat, 0.02)
-
-    flips = 'data/denver-deals-clean.csv'
-    df_flips = read_flips(flips)
-
-    df_plot = df_flips[['deal_type', 'lat', 'lng', 'perc_gain', 'status_changed_on']].copy()
-    lat_m = df_plot['lat'].mean()
-    lon_m = df_plot['lng'].mean()
-
-    lat = df_plot['lat'].values
-    lon = df_plot['lng'].values
-
-    xx, yy, zz = plot_kde2d(lon, lat, 0.02)
+    # xx, yy, zz = plot_kde2d(lon, lat, 0.02)

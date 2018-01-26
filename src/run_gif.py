@@ -43,7 +43,7 @@ def make_gif(filenames, fps=1.0):
         images.append(imageio.imread(filename))
     imageio.mimsave('images/maps/pngs/test.gif', images, fps=fps)
 
-if __name__ == '__main__':
+def main():
     print('--- Get data for making heat maps ---')
     flip_fn = 'data/denver-deals-clean.csv'
     df_flips = lib.read_flips(flip_fn)
@@ -58,6 +58,5 @@ if __name__ == '__main__':
     print('--- Making gmap images to be used in gif ---')
     make_imgs_for_gif(df_plot)
 
-    # print('--- Call .pngs to make .gif ---')
-    # filenames = glob.glob('images/maps/pngs/*.png')
-    # make_gif(filenames, fps=1.0)
+if __name__ == '__main__':
+    main()

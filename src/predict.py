@@ -1,6 +1,6 @@
 import pandas as pd
 import src.library as lib
-import _pickle as pickle
+import pickle as pickle
 from src.GoogleMapPlotter import GoogleMapPlotter
 
 def predict_investment_heatmap(best, black, gray, red):
@@ -28,13 +28,11 @@ def predict_investment_heatmap(best, black, gray, red):
     gmap.scatter(pins_best[0], pins_best[1], best['listing_number'].values, color='green', marker=True)
 
     # Save map:
-    dir_name = 'images/maps/'
-    map_name = 'predict_investments.html'
+    dir_name = 'static/maps/'
+    map_name = 'top20_investments_map.html'
     gmap.draw(dir_name + map_name)
 
-if __name__ == '__main__':
-    # Google API: AIzaSyDjQWALRhnei06NclCDO2NwMJKKCkIPtxY
-
+def predict_flip_risk(pkl, amae, deal_type, reno_budget):
     print('--- Read in MLS data ---')
     mls = 'data/emily-property-listings-20180116.csv'
     df_mls = lib.read_mls(mls)
@@ -54,14 +52,6 @@ if __name__ == '__main__':
        'structural_type', 'is_attached', 'stories', 'year', 'month']
     X_new = df_active[cols_for_pipe].copy()
 
-    print('--- Load pickled model ---')
-    with open('data/model.pkl', 'rb') as f:
-	       full_pipeline = pickle.load(f)
-
-    print('--- User will pick a type of flip and enter reno budget ---')
-    deal_type = 'fnf-80'  # 'pt-70', 'td-60'
-    reno_budget = 80000
-
     print('--- Append deal type on to X_new df ---')
     X_new.loc[:,'deal_type'] = deal_type
 
@@ -76,14 +66,31 @@ if __name__ == '__main__':
                            df_active[['street','city','state']]], axis=1)
 
     print('--- Define potential properties as black, gray, red ---')
-    amae = 30000
     black = X_predict[X_predict['gain'] > (reno_budget + amae)]
     gray = X_predict[(X_predict['gain'] >= reno_budget) &
                      (X_predict['gain'] < (reno_budget + amae))]
     red = X_predict[(X_predict['gain'] < reno_budget)]
 
-    print('--- Find top 5 investment options ---')
+    print('--- Find top 20 investment options ---')
     best = X_predict.nlargest(20, 'gain')
 
-    print('--- Plot on gmap ---')
+    return best, black, gray, red
+
+
+
+
+
+if __name__ == '__main__':
+    # Google API: AIzaSyDjQWALRhnei06NclCDO2NwMJKKCkIPtxY
+    print('--- User will pick a type of flip and enter reno budget ---')
+    amae = 17000
+    deal_type = 'fnf-80'  # 'pt-70', 'td-60'
+    reno_budget = 100000
+
+    print('--- Load pickled model ---')
+    with open('data/model.pkl', 'rb') as f:
+	       full_pipeline = pickle.load(f)
+
+    print('--- Make prediction map ---')
+    best, black, gray, red = predict_flip_risk(full_pipeline, amae, deal_type, reno_budget)
     predict_investment_heatmap(best, black, gray, red)

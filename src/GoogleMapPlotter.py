@@ -28,7 +28,8 @@ class GoogleMapPlotter(object):
         self.heatmap_points = []
         self.radpoints = []
         self.gridsetting = None
-        self.coloricon = os.path.join(os.path.dirname(__file__), 'markers/%s.png')
+        # self.coloricon = os.path.join(os.path.dirname(__file__), 'markers/%s.png')
+        self.coloricon = '/Users/emilygill/Documents/git_data_sci_proj/flip_risk_indexer/static/markers/%s.png'
         self.coloricon = self.coloricon.replace('\\', '\\\\')
         self.color_dict = mpl_color_map
         self.html_color_codes = html_color_codes

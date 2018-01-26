@@ -56,7 +56,7 @@ def plot_actual_v_pred(y_train, y_pred_train, y_test, y_pred_test):
     ax_test.set_xlabel('Actual target (test)')
     ax_test.plot(y_test, y_test, 'k-', alpha=0.5)
     ax_test.scatter(y_test, y_pred_test, alpha=0.5)
-    plt.savefig('images/pred_v_actual_scatter.png')
+    plt.savefig('static/plots/pred_v_actual_scatter.png')
 
 def print_feat_importance(forest_pipe):
     forest = forest_pipe.steps[3][1]
