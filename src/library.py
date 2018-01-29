@@ -141,6 +141,15 @@ def get_past_invest(df_mls, df_flips, y = 'perc_gain'):
     return df_past_invest
 
 def get_active_listings(df_mls):
+    '''
+    Uses the MLS to obtain only active (on market) listings, less than 500K, within metro Denver.
+    Args:
+    ---------
+        df_mls (pandas DataFrame): dataframe of all MLS listings in Denver.
+    Returns:
+    ---------
+        df_active (pandas DataFrame): dataframe of only active listings.
+    '''
     df_active = df_mls[(df_mls['status'] == 'active') & (df_mls['year'] == 2017)]
     df_active = df_active[df_active['list_price'] < 500000]
     df_active = df_active[(df_active['lat'] > 39.515) & (df_active['lat'] < 39.968)
@@ -149,15 +158,26 @@ def get_active_listings(df_mls):
     return df_active
 
 def plot_kde2d(x, y, bandwidth, xbins=100j, ybins=100j, **kwargs):
-    """Build 2D kernel density estimate (KDE)."""
-    # create grid of sample locations (default: 100x100)
+    '''
+    Calculates a 2-D Kernel Density Estimator using the lat/lon pairs of points,
+    plots it, and then returns the gridded X, Y, and Z used for plotting.
+    Args:
+    ---------
+        x (np array): longitude
+        y (np array): latitude
+        bandwidth (float): how coarse or smooth the function (surface) fits the data
+        xbins, ybins: grid for sample locations
+    Returns:
+    ---------
+        plots the kernel density estimator across a specified grid
+        X, Y, Z (no arrays): generated longitude, latitude, and heat values
+    '''
     X, Y = np.mgrid[x.min():x.max():xbins,
                       y.min():y.max():ybins]
     xy_sample = np.vstack([Y.ravel(), X.ravel()]).T
     xy_train  = np.vstack([y, x]).T
     kde = KernelDensity(bandwidth=bandwidth, **kwargs)
     kde.fit(xy_train)
-    # score_samples() returns the log-likelihood of the samples
     z = np.exp(kde.score_samples(xy_sample))
     Z = np.reshape(z, X.shape)
     plt.pcolormesh(X, Y, Z, cmap=plt.cm.RdYlGn_r)
@@ -169,6 +189,15 @@ def plot_kde2d(x, y, bandwidth, xbins=100j, ybins=100j, **kwargs):
     return X, Y, Z
 
 def pickle_data():
+    '''
+    Pickles data needed for web app.
+    Args:
+    ---------
+        None.
+    Returns:
+    ---------
+        None. Returns pickled pandas dataframes
+    '''
     mls = 'data/emily-property-listings-20180116.csv'
     flips = 'data/denver-deals-clean.csv'
     print('--- Reading dirty MLS .csv file line by line ---')
