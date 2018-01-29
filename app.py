@@ -129,7 +129,11 @@ def home():
 def get_heatmap():
     deal_types = ["fix n flip", "pop top", "scrape", "all types"]
     time_periods = ["past year", "past 6 months", "past 3 months"]
-    return render_template('hotzones.html', deal_types=deal_types, time_periods=time_periods)
+    default_u_time = 'past 3 months'
+    default_u_deal = 'all types'
+    default_map_filename = './static/alltypes_past3months.html'
+    return render_template('hotzones.html', deal_types=deal_types, time_periods=time_periods,
+                            map_filename=default_map_filename, u_time_period=default_u_time, u_deal_type=default_u_deal)
 
 # hotzones page showing requested map
 @app.route('/hotzones', methods=['GET','POST'])
