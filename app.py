@@ -7,12 +7,17 @@ from flask import Flask, render_template, request
 from flask_table import Table, Col
 from src.run import set_pipeline
 from GoogleMapPlotter import GoogleMapPlotter
-import src.library as lib
 
 app = Flask(__name__)
 
 with open('data/model.pkl', 'rb') as f:
     pipeline = pickle.load(f)
+
+with open('data/active.pkl', 'rb') as f:
+    df_active = pickle.load(f)
+
+with open('data/flips.pkl', 'rb') as f:
+    df_flips = pickle.load(f)
 
 def remove_previous_html():
     html_files = glob.glob(os.path.join('static/', '*_.html'))
@@ -20,8 +25,6 @@ def remove_previous_html():
         os.remove(f)
 
 def predict_investment_heatmap(best, black, gray, red):
-    flip_fn = 'data/denver-deals-clean.csv'
-    df_flips = lib.read_flips(flip_fn)
     df_sold = df_flips[df_flips['status'] == 'sold']
     df_plot = df_sold[['deal_type', 'lat', 'lng', 'perc_gain', 'status_changed_on','year', 'month']].copy()
     recent_heat = df_plot[(df_plot['year'] == 2017) &
@@ -50,14 +53,8 @@ def predict_investment_heatmap(best, black, gray, red):
     return u_filename
 
 def predict_flip_risk(pkl, amae, deal_type, reno_budget):
-    print('--- Read in MLS data ---')
-    mls = 'data/emily-property-listings-20180116.csv'
-    df_mls = lib.read_mls(mls)
-
-    print('--- Obtain currently active listings ---')
-    df_active = lib.get_active_listings(df_mls)
-    df_active = df_active.reset_index()
-    df_active.drop(['index'], axis=1, inplace=True)
+    df_new = df_active.reset_index()
+    df_new.drop(['index'], axis=1, inplace=True)
 
     print('--- Extract columns for model ---')
     cols_for_pipe = ['id', 'listing_number', 'status_changed_on',
@@ -67,7 +64,7 @@ def predict_flip_risk(pkl, amae, deal_type, reno_budget):
        'property_key', 'externally_last_updated_at', 'photos', 'property_type',
        'year_built', 'basement_finished_status', 'lat', 'lng',
        'structural_type', 'is_attached', 'stories', 'year', 'month']
-    X_new = df_active[cols_for_pipe].copy()
+    X_new = df_new[cols_for_pipe].copy()
 
     print('--- Append deal type on to X_new df ---')
     X_new.loc[:,'deal_type'] = deal_type
@@ -84,7 +81,7 @@ def predict_flip_risk(pkl, amae, deal_type, reno_budget):
                            pd.Series(gain, name="gain"),
                            pd.Series(total_investment, name='total_investment'),
                            pd.Series(perc_roi, name='perc_roi'),
-                           df_active[['street','city','state']]], axis=1)
+                           df_new[['street','city','state']]], axis=1)
 
     print('--- Define potential properties as black, gray, red ---')
     black = X_predict[X_predict['gain'] > (reno_budget + amae)]
@@ -122,7 +119,6 @@ class Top20Table(Table):
     total_investment = Col('Total Investment')
     perc_roi = Col('Predicted ROI')
 
-
 # home page
 @app.route('/')
 def home():
@@ -143,10 +139,8 @@ def show_heatmap():
     u_time_period = str(request.form['u_time_period'])
     u_deal_type = str(request.form['u_deal_type'])
     map_filename = '.' + '/static/' + u_deal_type.replace(" ", "") + '_' + u_time_period.replace(" ","") + '.html'
-    # map_filename = './static/2017_2_SOND.html'
     return render_template('hotzones.html', deal_types=deal_types, time_periods=time_periods,
                             map_filename=map_filename, u_time_period=u_time_period, u_deal_type=u_deal_type)
-
 
 # input page
 @app.route('/input')
@@ -168,11 +162,8 @@ def predict():
     amae = 20000
     best, black, gray, red = predict_flip_risk(pipeline, amae, deal_type, reno_budget)
     items = prepare_top20table(best)
-    # table = items.to_html(justify='center')
     items = items.to_dict('records')
-    # items = items.to_dict()
     table = Top20Table(items)
-    # predict_investment_heatmap(best, black, gray, red)
     u_filename = predict_investment_heatmap(best, black, gray, red)
     html_map = '.' + u_filename
     return render_template('predict.html', html_map=html_map,
