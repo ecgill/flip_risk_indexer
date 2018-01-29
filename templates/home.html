@@ -2,11 +2,11 @@
 {% block content %}
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron" style="background-image: url(../static/img/denver-skyline.jpg); background-size: 100% 100%; opacity=0.2;">
+    <div class="jumbotron" style="background-image: url(../static/test.gif); background-size: 100%; opacity=0.2;">
     <div class="container">
-        <h1>Looking to invest in Denver?</h1>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Find a Flip! &raquo;</a></p>
+        <h1>Looking to invest in Denver real estate?</h1>
+        <!-- <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p> -->
+        <p><a class="btn btn-primary btn-lg" href="/input" role="button">Find a Flip! &raquo;</a></p>
       </div>
     </div>
 
@@ -18,29 +18,37 @@
       <!-- Example row of columns -->
       <div class="row">
         <div class="col-md-4">
-          <img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-          <img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          <img class="img-circle" src='../static/img/heatmap_header_sq.png' alt="Generic placeholder image" width="140" height='140'>
+          <h2>Hot Zones</h2>
+          <p>The opportunities for real estate investment in Denver is exploding and always changing. Maps and gifs are used to view shifting hot spots of real estate investment through time.  </p>
+          <p><a class="btn btn-default" href="#" role="button">Hot Zone Heatmaps &raquo;</a></p>
        </div>
         <div class="col-md-4">
-          <img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          <img class="img-circle" src='../static/img/flips_sq.png' alt="Generic placeholder image" width="140" height="140">
+          <h2>Flip Risk Model</h2>
+          <p>A Kernel Density Estimator was used to quantify these hot zones and use them as features in a Random Forest regression model. The RF regression model uses hot zone metrics plus MLS listing data to predict your ROI given one of three type of flips: fix 'n flip, pop-top, total tear-down. </p>
+          <p><a class="btn btn-default" href="/input" role="button">Try it out &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+          <img class="img-circle" src='../static/img/IMG_5797_sq.JPG' alt="Generic placeholder image" width="140" height="140">
+          <h2>Emily Gill</h2>
+          <h4>Data Scientist | Civil Engg. Ph.D.</h4>
+          <p>Flip Risk Indexer was my capstone project during my Data Science Immersive at Galvanize</p>
+          <p><a class="btn btn-default" href="/contact" role="button">Contact &raquo;</a></p>
         </div>
       </div>
 
       <hr>
 
       <footer>
-        <p>&copy; 2016 Company, Inc.</p>
+        <p>&copy; Jan 2018 Emily Gill. <br /><br /> Disclaimer: THE MODEL ON THIS WEBSITE WAS THE RESULT OF A STUDENT PROJECT EXPLORING A CONCEPT.
+          ALL INFORMATION CONTENT MATERIALS AND OTHER SERVICES INCLUDED ON OR OTHERWISE MADE AVAILABLE TO YOU THROUGH THIS
+          WEBSITE ARE PROVIDED ON A “AS IS” AND “AS AVAILABLE” BASIS.  I MAKE NO REPRESENTATIONS OR WARRANTIES OF ANY KIND
+          EXPRESS OR IMPLIED AS TO THE OPERATION OF THE INFORMATION CONTENT MATERIALS OR OTHER SERVICES INCLUDED ON OR
+          OTHERWISE MADE AVAILABLE ON THIS WEBSITE.  YOU EXPRESSLY AGREE THAT YOUR USE OF THIS SITE IS AT YOUR SOLE RISK. I WILL NOT
+          BE LIABLE FOR ANY DAMAGES OF ANY KIND ARISING FROM THE USE OF THIS WEBSITE OR FROM ANY INFORMATION, CONTENT, MATERIALS
+          OR OTHER SERVICES INCLUDED ON OR OTHERWISE MADE AVAILABLE HERE, INCLUDING BUT NOT LIMITED TO, DIRECT, INDIRECT, INCIDENTAL,
+          PUNITIVE AND CONSEQUENTIAL DAMAGES. </p>
       </footer>
     </div> <!-- /container -->
 
