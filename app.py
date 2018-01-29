@@ -1,15 +1,23 @@
+import os
+import uuid
+import glob
 import pickle
 import pandas as pd
 from flask import Flask, render_template, request
 from flask_table import Table, Col
 from src.run import set_pipeline
-from src.GoogleMapPlotter import GoogleMapPlotter
+from GoogleMapPlotter import GoogleMapPlotter
 import src.library as lib
 
 app = Flask(__name__)
 
 with open('data/model.pkl', 'rb') as f:
     pipeline = pickle.load(f)
+
+def remove_previous_html():
+    html_files = glob.glob(os.path.join('static/', '*_.html'))
+    for f in html_files:
+        os.remove(f)
 
 def predict_investment_heatmap(best, black, gray, red):
     flip_fn = 'data/denver-deals-clean.csv'
@@ -27,8 +35,9 @@ def predict_investment_heatmap(best, black, gray, red):
     pins_best = [tuple(best['lat'].values), tuple(best['lng'].values)]
 
     # Make map:
-    api_key = 'AIzaSyD3vBwndDQ1bj2bfbUth1vxoch2S_HEKhA'
-    gmap = GoogleMapPlotter(39.728, -104.963, 11, apikey=api_key)
+    # api_key = 'AIzaSyD3vBwndDQ1bj2bfbUth1vxoch2S_HEKhA'
+    # gmap = GoogleMapPlotter(39.728, -104.963, 11, apikey=api_key)
+    gmap = GoogleMapPlotter(39.728, -104.963, 13)
     gmap.heatmap(path_heat[0], path_heat[1], radius=50, maxIntensity=5)
     gmap.scatter(pins_black[0], pins_black[1], black['listing_number'].values, color='black', alpha=1, s=60, marker=False)
     gmap.scatter(pins_gray[0], pins_gray[1], gray['listing_number'].values, color='gray', alpha=1, s=60, marker=False)
@@ -36,9 +45,9 @@ def predict_investment_heatmap(best, black, gray, red):
     gmap.scatter(pins_best[0], pins_best[1], best['listing_number'].values, color='green', marker=True)
 
     # Save map:
-    dir_name = 'static/maps/'
-    map_name = 'top20_investments_map.html'
-    gmap.draw(dir_name + map_name)
+    u_filename = './static/' + str(uuid.uuid4()) + '_.html'
+    gmap.draw(u_filename)
+    return u_filename
 
 def predict_flip_risk(pkl, amae, deal_type, reno_budget):
     print('--- Read in MLS data ---')
@@ -66,11 +75,15 @@ def predict_flip_risk(pkl, amae, deal_type, reno_budget):
     print('--- Predict on new data ---')
     y_pred_new = pkl.predict(X_new.copy())
     gain = y_pred_new - X_new['list_price']
+    total_investment = X_new['list_price'] + reno_budget
+    perc_roi = (y_pred_new - X_new['list_price'])/(X_new['list_price'] + reno_budget)
     X_predict = pd.concat([X_new[['deal_type','id','listing_number',
                                   'status_changed_on','list_price','property_key',
                                   'lat','lng','year_built','beds','baths']],
                            pd.Series(y_pred_new, name="y_pred"),
                            pd.Series(gain, name="gain"),
+                           pd.Series(total_investment, name='total_investment'),
+                           pd.Series(perc_roi, name='perc_roi'),
                            df_active[['street','city','state']]], axis=1)
 
     print('--- Define potential properties as black, gray, red ---')
@@ -86,15 +99,14 @@ def predict_flip_risk(pkl, amae, deal_type, reno_budget):
 
 def prepare_top20table(best):
     best_table = best[['listing_number', 'street', 'city', 'year_built', 'beds',
-                       'baths', 'list_price', 'gain']].copy()
+                       'baths', 'list_price', 'y_pred', 'gain', 'total_investment', 'perc_roi']].copy()
     best_table['year_built'] = best_table['year_built'].astype(int)
+    best_table['y_pred'] = best_table['y_pred'].astype(int)
     best_table['gain'] = best_table['gain'].astype(int)
-    best_table['perc_roi'] = (best_table['list_price']+best_table['gain'])/best_table['list_price']
     best_table['perc_roi'] = best_table['perc_roi'].round(2)
     best_table = best_table.reset_index().astype(str)
     best_table.drop(['index'], axis=1, inplace=True)
-    items = best_table.to_dict('records')
-    return items
+    return best_table
 
 class Top20Table(Table):
     ''' Quick class to make a Flask table '''
@@ -105,44 +117,67 @@ class Top20Table(Table):
     beds = Col('Beds')
     baths = Col('Baths')
     list_price = Col('List Price')
-    gain = Col('Predicted Selling Price')
+    y_pred = Col('Pred Sell Price')
+    gain = Col('Gain after Inv')
+    total_investment = Col('Total Investment')
     perc_roi = Col('Predicted ROI')
+
 
 # home page
 @app.route('/')
 def home():
     return render_template('home.html')
 
+# hotzones page
+@app.route('/hotzones')
+def get_heatmap():
+    deal_types = ["fix n flip", "pop top", "scrape", "all types"]
+    time_periods = ["past year", "past 6 months", "past 3 months"]
+    return render_template('hotzones.html', deal_types=deal_types, time_periods=time_periods)
+
+# hotzones page showing requested map
+@app.route('/hotzones', methods=['GET','POST'])
+def show_heatmap():
+    deal_types = ["fix n flip", "pop top", "scrape", "all types"]
+    time_periods = ["past year", "past 6 months", "past 3 months"]
+    u_time_period = str(request.form['u_time_period'])
+    u_deal_type = str(request.form['u_deal_type'])
+    map_filename = '.' + '/static/' + u_deal_type.replace(" ", "") + '_' + u_time_period.replace(" ","") + '.html'
+    # map_filename = './static/2017_2_SOND.html'
+    return render_template('hotzones.html', deal_types=deal_types, time_periods=time_periods,
+                            map_filename=map_filename, u_time_period=u_time_period, u_deal_type=u_deal_type)
+
+
 # input page
 @app.route('/input')
 def results():
-    types = ["fix 'n flip", "pop-top", "scrape"]
+    types = ["fix n flip", "pop top", "scrape"]
     return render_template('input.html', deal_types = types )
 
 # # prediction page
 @app.route('/predict', methods=['POST'])
 def predict():
+    remove_previous_html()
     u_reno_budget = str(request.form['u_reno_budget'])
     u_deal_type = str(request.form['u_deal_type'])
-    deal_type_dict = {"fix 'n flip": 'fnf-80',
-                      "pop-top": 'pt-70',
+    deal_type_dict = {"fix n flip": 'fnf-80',
+                      "pop top": 'pt-70',
                       "scrape": 'td-60'}
     deal_type = deal_type_dict[u_deal_type]
-    reno_budget = int(u_reno_budget)*100
-    amae = 17000
+    reno_budget = int(u_reno_budget)*1000
+    amae = 20000
     best, black, gray, red = predict_flip_risk(pipeline, amae, deal_type, reno_budget)
     items = prepare_top20table(best)
+    # table = items.to_html(justify='center')
+    items = items.to_dict('records')
+    # items = items.to_dict()
     table = Top20Table(items)
-    predict_investment_heatmap(best, black, gray, red)
-    html_map = 'static/maps/top20_investments_map.html'
+    # predict_investment_heatmap(best, black, gray, red)
+    u_filename = predict_investment_heatmap(best, black, gray, red)
+    html_map = '.' + u_filename
     return render_template('predict.html', html_map=html_map,
                             u_deal_type=u_deal_type, u_reno_budget = u_reno_budget,
                             top20table=table)
-
-# about page
-@app.route('/about')
-def about():
-    return render_template('about.html')
 
 # contact page
 @app.route('/contact')
