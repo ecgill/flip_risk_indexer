@@ -1,4 +1,5 @@
 import csv
+import pickle
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -166,6 +167,35 @@ def plot_kde2d(x, y, bandwidth, xbins=100j, ybins=100j, **kwargs):
     plt.colorbar()
     plt.savefig('images/2d_kernel_heatmap.png', transparent=True)
     return X, Y, Z
+
+def pickle_data():
+    mls = 'data/emily-property-listings-20180116.csv'
+    flips = 'data/denver-deals-clean.csv'
+    print('--- Reading dirty MLS .csv file line by line ---')
+    # lib.write_clean_mls(mls)
+
+    target = 'status_price'
+    print('--- Define target variable as {}'.format(target))
+
+    print('--- Reading clean MLS .csv file to pandas DF ---')
+    df_mls = read_mls(mls)
+
+    print('--- Reading flips .csv file to pandas DF ---')
+    df_flips = read_flips(flips)
+
+    df_active = get_active_listings(df_mls)
+
+    print('--- Pickle model ---')
+    with open('data/mls.pkl', 'wb') as f:
+        pickle.dump(df_mls, f)
+
+    print('--- Pickle model ---')
+    with open('data/flips.pkl', 'wb') as f:
+        pickle.dump(df_flips, f)
+
+    print('--- Pickle model ---')
+    with open('data/active.pkl', 'wb') as f:
+        pickle.dump(df_active, f)
 
 
 if __name__ == '__main__':
