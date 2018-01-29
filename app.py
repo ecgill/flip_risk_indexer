@@ -38,9 +38,9 @@ def predict_investment_heatmap(best, black, gray, red):
     pins_best = [tuple(best['lat'].values), tuple(best['lng'].values)]
 
     # Make map:
-    # api_key = 'AIzaSyD3vBwndDQ1bj2bfbUth1vxoch2S_HEKhA'
-    # gmap = GoogleMapPlotter(39.728, -104.963, 11, apikey=api_key)
-    gmap = GoogleMapPlotter(39.728, -104.963, 13)
+    api_key = 'AIzaSyD3vBwndDQ1bj2bfbUth1vxoch2S_HEKhA'
+    gmap = GoogleMapPlotter(39.728, -104.963, 13, apikey=api_key)
+    # gmap = GoogleMapPlotter(39.728, -104.963, 13)
     gmap.heatmap(path_heat[0], path_heat[1], radius=50, maxIntensity=5)
     gmap.scatter(pins_black[0], pins_black[1], black['listing_number'].values, color='black', alpha=1, s=60, marker=False)
     gmap.scatter(pins_gray[0], pins_gray[1], gray['listing_number'].values, color='gray', alpha=1, s=60, marker=False)
