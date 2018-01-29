@@ -8,16 +8,23 @@
             <div class="jumbotron">
 
                   <h2>Your Predicted Top 20!</h2>
-                  <p>Green = Top 20, Black = Safe Flip, Gray = Risky Flip, Red = Don't flip!</p>
-                  <p>[Hover over green pins to obtain listing number of property.]</p>
+                  <h3>Green = Top 20, Black = Safe Flip, Gray = Risky Flip, Red = Don't flip!</h3>
+                  <p>[Hover over green pins to obtain listing number of property. See below for more info on how listings are classified.]</p>
                   <iframe src={{html_map}} style="display: block; width: 90%; height: 600px; margin: 0 auto; border: 0;"></iframe>
                   <p>Showing results for your choices of a {{u_deal_type}} with ${{u_reno_budget}}K:</p>
                       <div>
                         <p>{{top20table}}</p>
                           <!-- {{top20table | safe}} -->
                       </div>
-                  <p>Example calculation of metrics:</p>
-
+                <p>Example calculation of metrics:</p>
+                <ul>
+                  <li>Suppose your renovation budget is 125K and you notice three properties on the MLS: property A is listed at 300K, property B is listed at 375K and property C is listed at 400K.</li>
+                  <li>Assume all are without your budget for purchasing a home. The model predicts a resale value for all three of 500K. </li>
+                  <li>Therefore, potential gain for A, B and C are 200K, 125K, and 100K, respectively.</li>
+                  <li>In this case, property A (black) would be classified as a safe flip because $200K is greater than what you will presumably spend on your reno ($125K) + model error ($20K). </li>
+                  <li>Property B is classified as a risky flip (gray) because you would basically just make your money back, and C (red) is a property to stay away from because the model predicts that you wouldn't make your money back. </li>
+                </ul>
+                    ROI is calculated as the percentage gain from your total investment. In the case of Property A, total investment would be $300K + $125K = $425K. If resale is 500K, then ROI is = $75/$425 = +0.17%.
             </div>
 
         </div>
