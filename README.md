@@ -7,7 +7,7 @@ Emily Gill
 
 Galvanize Data Science Immersive - January 2018
 
-[FlipRiskIndexer.com](flipriskindexer.com)
+[FlipRiskIndexer.com](http://flipriskindexer.com)
 
 ## Table of Contents
 1. [Background](#background)
