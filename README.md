@@ -154,13 +154,16 @@ Additionally, I would explore more of the features of the MLS. There are many! T
 
 ## Repo Structure
 ```
-├── data (will contain csv files and pickles of data)
-├── notebooks (will contain scripts used for EDA and visualizations)
-├── src (will contain the scripts used to perform the analysis)
-├── images (graphics used for web app, github)
-├── web_app
-|     ├── static
-|     ├── templates
-|     └── app.py (will run the web app via Flask)
-└── README.md
+├── /data (pickles of data and model)
+├── /src (contains all main scripts used in analysis)
+|     ├── (custom transformers used in Pipeline Model object called by run.py)
+|     ├── library.py (library of functions used frequently throughout analysis)
+|     ├── run.py (main run file for setting up Pipeline model)
+|     └── run_cv_gridsearch.py (calls Pipeline object, cross-validates and grid-searches hyperparameters)
+├── /static (graphics used for web app, github)
+├── /templates (pages of website called by Flask app.py)
+├── GoogleMapPlotter (python wrapper over Google Maps API to produce heatmaps)
+├── README.md
+├── app.py (Flask app script. Calls GoogleMapPlotter.py, /templates, and /static)
+└── run_heatmaps_gif.py (script that creates heatmaps displayed in web app)
 ```
